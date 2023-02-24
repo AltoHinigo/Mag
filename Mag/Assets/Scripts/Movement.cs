@@ -15,10 +15,17 @@ public class Movement : MonoBehaviour
 
     private string GroundTag = "Graund";
 
+    private Animator animator;
+
     // Start is called before the first frame update
     void Start()
     {
         Agent = GetComponent<NavMeshAgent>();
+    }
+
+    private void Awake()
+    {
+        animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -27,7 +34,7 @@ public class Movement : MonoBehaviour
         //Vector3 newDir = Vector3.RotateTowards(transform.forward, (target.transform.position - transform.position), radian_angle, 0.0F);
         //transform.rotation = Quaternion.LookRotation(newDir);
         Ray ray = MCamera.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out Hit, Mathf.Infinity))
+            if(Physics.Raycast(ray.origin, ray.direction, out Hit))//if (Physics.Raycast(ray, out Hit, Mathf.Infinity))
             if (Hit.collider.CompareTag(GroundTag))
             {
                 var direction = (Hit.point - transform.position).normalized;
@@ -35,6 +42,17 @@ public class Movement : MonoBehaviour
                 transform.rotation = Quaternion.LookRotation(direction);
                 if (Input.GetMouseButton(0))
                     Agent.SetDestination(Hit.point);
+
+
+                
+                if(Agent.hasPath)
+                {
+                    animator.SetFloat("Speed", 0.5f);
+                }
+                else
+                {
+                    animator.SetFloat("Speed", 0f);
+                }
             }
     }
     /*

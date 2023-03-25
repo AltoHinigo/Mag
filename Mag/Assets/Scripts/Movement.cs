@@ -66,6 +66,7 @@ public class Movement : MonoBehaviour
                 {
                     aParticleSystem.Pause();
                     aParticleSystem.Clear();
+                    TimeIsOver = false;
                 }
                 if (Hit.collider.CompareTag(GroundTag))
                 {
@@ -94,8 +95,6 @@ public class Movement : MonoBehaviour
                 }
                 if (Hit.collider.CompareTag(GroundTag))
                 {
-                    
-
                     if (Input.GetMouseButton(0))
                     {
                         Agent.SetDestination(Hit.point);

@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using TMPro;
 using static UnityEditor.Progress;
+//using Unity.VisualScripting;
 //using System.Numerics;
 
 public class Fight : MonoBehaviour
@@ -11,6 +12,8 @@ public class Fight : MonoBehaviour
     public Vector3 BeginVec3 = new Vector3(0,1,0);
 
     public Vector3 EndVec3 = new Vector3(0, 1, 4);
+
+    public int switch_on = 0;
 
     private static List<GameObject> UnderAttack = new List<GameObject>();
 
@@ -28,9 +31,17 @@ public class Fight : MonoBehaviour
 
     private bool TimeAttackTic = false;
 
+    [SerializeField] GameObject PlayerStats;
+
+    private Stats _Stats;
+
+    private MortalObject _MortalObject;
+
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
+        if (!PlayerStats.TryGetComponent<Stats>(out _Stats))
+            Debug.Log("ERROR TryGetComponent<Stats>");
         aParticleSystem = ParticleSystemObject.GetComponent<ParticleSystem>();
         aTimer = new Timer(5000);
         aTimer.Elapsed += OnTimer;
@@ -51,15 +62,29 @@ public class Fight : MonoBehaviour
 
     void Update()
     {
-        if(TimeAttackTic)
+        if (TimeAttackTic)
         {
-            fire();
+            switch (switch_on)
+            {
+                case 0:
+                    fire();
+                    break;
+                case 1:
+                    lazer();
+                    break;
+                //default:
+            }
             for (int i = 0; i < UnderAttack.Count; i++)
             {
-                if(UnderAttack[i].gameObject.GetComponent<Renderer>().material.GetColor("_Color") == Color.red)
+                //_Stats.ChangeHP(-1);
+                if (UnderAttack[i].TryGetComponent<MortalObject>(out _MortalObject))
+                {
+                    _MortalObject.ChangeHP(-1);
+                }
+                /*if (UnderAttack[i].gameObject.GetComponent<Renderer>().material.GetColor("_Color") == Color.red)
                     UnderAttack[i].gameObject.GetComponent<Renderer>().material.SetColor("_Color", Color.white);
                 else
-                    UnderAttack[i].gameObject.GetComponent<Renderer>().material.SetColor("_Color", Color.red);
+                    UnderAttack[i].gameObject.GetComponent<Renderer>().material.SetColor("_Color", Color.red);*/
             }
             TimeAttackTic = false;
         }
@@ -105,6 +130,43 @@ public class Fight : MonoBehaviour
                             }
                         }
                         if(!flag)
+                        {
+                            UnderAttack.Add(hits[hit].collider.gameObject);
+                        }
+                        else
+                            flag = false;
+                        hit++;
+                    }
+                }
+            }
+    }
+
+    void lazer()
+    {
+        LayerMask layerMask = 1 << 8;
+        float dist = 30.0f;
+        bool flag = false;
+        RaycastHit[] hits;
+        int hit = 0;
+        UnderAttack.Clear();
+        for (float y = -0.2f; y != 0.2f; y += 0.1f)
+            for (float x = -0.2f; x != 0.2f; x += 0.1f)
+            {
+                //Debug.DrawRay(transform.position + transform.TransformDirection(new Vector3(x, y, 0)), transform.TransformDirection(new Vector3(x, y, dist)));
+                hits = Physics.RaycastAll(transform.position + transform.TransformDirection(new Vector3(x, y, 0)), transform.TransformDirection(new Vector3(x, y, dist)), dist, layerMask);
+                if (hits.Length != 0)
+                {
+                    while (hit < hits.Length)
+                    {
+                        for (int MortalObject = 0; MortalObject < UnderAttack.Count; MortalObject++)
+                        {
+                            if (UnderAttack[MortalObject].GetHashCode() == hits[hit].collider.gameObject.GetHashCode())
+                            {
+                                flag = true;
+                                break;
+                            }
+                        }
+                        if (!flag)
                         {
                             UnderAttack.Add(hits[hit].collider.gameObject);
                         }

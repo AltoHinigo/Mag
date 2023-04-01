@@ -974,7 +974,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _MaxHP: 200
   _HP: 200
-  _MagicStaffNow: 1
+  _Speed: 10
+  _MagicStaffNow: 0
   _MagicStaff:
   - {fileID: 1694642422}
   - {fileID: 2042002350}
@@ -983,6 +984,18 @@ MonoBehaviour:
   _BarColor: {r: 0.5943396, g: 0.5943396, b: 0.5943396, a: 0}
   _BarFiller: {fileID: 1005307341}
   _BarColorFiller: {r: 0.764151, g: 0.32200065, b: 0.32200065, a: 0}
+--- !u!114 &490036703
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 490036689}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04780f44eeac10643b7568ee21edf9a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &531493200
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1359,7 +1372,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 765334035}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 632918462}
+        m_TargetAssemblyTypeName: Fight, Assembly-CSharp
+        m_MethodName: ButtonOnClickA
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: ButtonOnClickA()
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &765334035
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1893,7 +1918,7 @@ NavMeshAgent:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1205632522}
-  m_Enabled: 1
+  m_Enabled: 0
   m_AgentTypeID: 0
   m_Radius: 0.5
   m_Speed: 3.5
@@ -2220,7 +2245,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1325929697}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 632918462}
+        m_TargetAssemblyTypeName: Fight, Assembly-CSharp
+        m_MethodName: ButtonOnClickB
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1325929697
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7359,7 +7396,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1626059978}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 632918462}
+        m_TargetAssemblyTypeName: Fight, Assembly-CSharp
+        m_MethodName: ButtonOnClickC
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1626059978
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7606,7 +7655,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1675776312}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 632918462}
+        m_TargetAssemblyTypeName: Fight, Assembly-CSharp
+        m_MethodName: ButtonOnClickD
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1675776312
 MonoBehaviour:
   m_ObjectHideFlags: 0

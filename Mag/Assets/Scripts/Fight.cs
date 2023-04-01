@@ -37,6 +37,10 @@ public class Fight : MonoBehaviour
 
     private MortalObject _MortalObject;
 
+    private bool AClicked = false;
+
+    private bool BClicked = false;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -88,8 +92,9 @@ public class Fight : MonoBehaviour
             }
             TimeAttackTic = false;
         }
-        if (Input.GetKey(KeyCode.W))
+        if (Input.GetKey(KeyCode.W) || AClicked)
         {
+            AClicked = false;
             aTimer.Start();
             bTimer.Start();
             aParticleSystem.Play();
@@ -105,6 +110,26 @@ public class Fight : MonoBehaviour
         }
     }
 
+    public void ButtonOnClickA()
+    {
+        AClicked = true;
+    }
+
+    public void ButtonOnClickB()
+    {
+        BClicked = true;
+    }
+
+    public void ButtonOnClickC()
+    {
+        switch_on = 0;
+    }
+
+    public void ButtonOnClickD()
+    {
+        switch_on = 1;
+    }
+
     void fire()
     {
         LayerMask layerMask = 1 << 8;
@@ -116,6 +141,7 @@ public class Fight : MonoBehaviour
         for (float y = -1; y != 2; y += 0.5f)
             for (float x = -1; x != 2; x += 0.5f)
             {
+                Debug.DrawRay(transform.position, transform.TransformDirection(new Vector3(x, y, dist)), Color.yellow);
                 hits = Physics.RaycastAll(transform.position, transform.TransformDirection(new Vector3(x, y, dist)), dist, layerMask);
                 if (hits.Length != 0)
                 {
@@ -152,7 +178,7 @@ public class Fight : MonoBehaviour
         for (float y = -0.2f; y != 0.2f; y += 0.1f)
             for (float x = -0.2f; x != 0.2f; x += 0.1f)
             {
-                //Debug.DrawRay(transform.position + transform.TransformDirection(new Vector3(x, y, 0)), transform.TransformDirection(new Vector3(x, y, dist)));
+                Debug.DrawRay(transform.position + transform.TransformDirection(new Vector3(x, y, 0)), transform.TransformDirection(new Vector3(x, y, dist)), Color.red);
                 hits = Physics.RaycastAll(transform.position + transform.TransformDirection(new Vector3(x, y, 0)), transform.TransformDirection(new Vector3(x, y, dist)), dist, layerMask);
                 if (hits.Length != 0)
                 {

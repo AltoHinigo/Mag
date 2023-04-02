@@ -7,6 +7,7 @@ public class AreaOfEffectDamage : MonoBehaviour
 {
 
     [SerializeField] private Effects _Effect;
+    [SerializeField] private InteractiveObject _InteractiveObject;
 
     private List<GameObject> UnderEffects = new List<GameObject>();
     // Start is called before the first frame update
@@ -27,8 +28,11 @@ public class AreaOfEffectDamage : MonoBehaviour
         GetAreas();
         for (int i = 0; i < UnderEffects.Count; i++)
         {
-            AreaEffectInfo tmp = UnderEffects[i].GetComponent<AreaEffectInfo>();
-            _Effect.AddEffect(tmp.Info);
+            AreaEffectInfo tmp;
+            if (UnderEffects[i].TryGetComponent<AreaEffectInfo>(out tmp))
+                _Effect.AddEffect(tmp.Info);
+            else
+                _InteractiveObject.DoSomthing();
         }
         //Debug.Log(UnderEffects[i].name);
         //Debug.DrawRay(transform.position + transform.TransformDirection(new Vector3(0, -1, 0)), transform.TransformDirection(new Vector3(0, 3, 0)), Color.red);

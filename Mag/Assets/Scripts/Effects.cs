@@ -9,9 +9,10 @@ public class Effect
     public string Caption = "";
     public double EffectTime = 1;
     public int TikDamage = 0;
-    public int EffectSpeed = 0;
+    public float EffectSpeed = 0;
     public int EffectMaxHP = 0;
     public Timer timer;
+    public bool EffectsUsed = false;
 
     public Effect(int tikDamage, int effectTime)
     {
@@ -24,8 +25,8 @@ public class Effect
             TimeOver = true;
         };
     }
-    public Effect(string caption, double effectTime,
-        int tikDamage, int effectSpeed, int effectMaxHP)
+    public Effect(string caption, int effectTime,
+        int tikDamage, float effectSpeed, int effectMaxHP)
     {
         Caption = caption;
         EffectTime = effectTime;
@@ -89,30 +90,52 @@ public class Effects : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //string debugstr = "";//
         if(!Flags) return;
         Flags = false;
         int i = 0;
         while (i < _Effects.Count)
         {
+            //debugstr += _Effects[i].Caption + ";  ";//
             if (_Effects[i].TimeOver)
             {
+                if (_Effects[i].EffectsUsed)
+                {
+                    if (_Effects[i].EffectSpeed != 0)
+                        Stat.ChangeSpeed(-_Effects[i].EffectSpeed);
+                    if (_Effects[i].EffectMaxHP != 0)
+                        Stat.ChangeHPMax(-_Effects[i].EffectMaxHP);
+                }
                 _Effects.RemoveAt(i);
             }
             else
             {
                 if (_Effects[i].TikDamage != 0)
                     Stat.ChangeHP(_Effects[i].TikDamage);
+                if (!_Effects[i].EffectsUsed)
+                {
+                    _Effects[i].EffectsUsed = true;
+                    if (_Effects[i].EffectSpeed != 0)
+                        Stat.ChangeSpeed(_Effects[i].EffectSpeed);
+                    if (_Effects[i].EffectMaxHP != 0)
+                        Stat.ChangeHPMax(_Effects[i].EffectMaxHP);
+                }
+                
                 i++;
             }
         }
+        //Debug.Log(debugstr);//
     }
 
-    public void AddEffect(double EffectTime, int TikDamage = 0, int EffectSpeed = 0,
+    public void AddEffect(int EffectTime, int TikDamage = 0, int EffectSpeed = 0,
         int EffectMaxHP = 0, string Caption = "")
     {
         for (int i = 0; i < _Effects.Count; i++)
             if (_Effects[i].Caption == Caption)
+            {
+                _Effects[i].EffectsUsed = false;
                 return;
+            }
         _Effects.Add(new Effect(Caption, EffectTime, TikDamage, EffectSpeed, EffectMaxHP));
     }
     public void AddEffect(Effect effect)
@@ -125,6 +148,7 @@ public class Effects : MonoBehaviour
             effect.TimerStart();
             return;
         }
+        effect.EffectsUsed = false;
         _Effects.Add(effect);
             
     }

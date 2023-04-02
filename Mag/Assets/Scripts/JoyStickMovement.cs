@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.VersionControl;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody), typeof(BoxCollider))]
@@ -12,12 +13,29 @@ public class JoyStickMovement : MonoBehaviour
 
     [SerializeField] private float _moveSpeed;
 
+    public void ChangeSpeed(float moveSpeed)
+    {
+        //Debug.Log("!");
+        //Debug.Log("moveSpeed " + moveSpeed);
+        //Debug.Log("_moveSpeed " + _moveSpeed);
+        if (moveSpeed != 0)
+            _moveSpeed = moveSpeed;
+    }
     private void FixedUpdate()
     {
+
         _rigidbody.velocity = new Vector3(_MoveJStk.Horizontal * _moveSpeed, _rigidbody.velocity.y, _MoveJStk.Vertical * _moveSpeed);
 
+        if ((_ViewJStk.Horizontal != 0 || _ViewJStk.Vertical != 0) && _moveSpeed == 0)
+        {
+            //Debug.Log("!!!!!!!!!!!!!!!!!! "+_rigidbody.velocity);
+            _rigidbody.velocity = new Vector3(_MoveJStk.Horizontal, _rigidbody.velocity.y, _MoveJStk.Vertical);
+            transform.rotation = Quaternion.LookRotation(new Vector3(_ViewJStk.Horizontal, _rigidbody.velocity.y, _ViewJStk.Vertical));
+            return;
+        }
         if (_MoveJStk.Horizontal != 0 || _MoveJStk.Vertical != 0)
         {
+            //Debug.Log(_rigidbody.velocity);
             transform.rotation = Quaternion.LookRotation(_rigidbody.velocity);
             _animator.SetBool("Walk", true);
         }
@@ -25,5 +43,6 @@ public class JoyStickMovement : MonoBehaviour
             _animator.SetBool("Walk", false);
         if (_ViewJStk.Horizontal != 0 || _ViewJStk.Vertical != 0)
             transform.rotation = Quaternion.LookRotation(new Vector3(_ViewJStk.Horizontal, _rigidbody.velocity.y, _ViewJStk.Vertical));
+
     }
 }

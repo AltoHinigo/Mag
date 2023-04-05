@@ -18,7 +18,10 @@ public class Effect
     {
         TikDamage = tikDamage;
         EffectTime = effectTime;
-        timer = new Timer(effectTime);
+        if (effectTime == 0)
+            timer = new Timer(1);
+        else
+            timer = new Timer(effectTime);
         timer.AutoReset = false;
         timer.Elapsed += (sender, e) =>
         {
@@ -34,7 +37,10 @@ public class Effect
         EffectSpeed = effectSpeed;
         EffectMaxHP = effectMaxHP;
         EffectTime = effectTime;
-        timer = new Timer(effectTime);
+        if(effectTime == 0)
+            timer = new Timer(1);
+        else
+            timer = new Timer(effectTime);
         timer.AutoReset = false;
         timer.Elapsed += (sender, e) =>
         {
@@ -72,7 +78,6 @@ public class Effects : MonoBehaviour
         _TimerTick.Elapsed += _TimerTick_Elapsed;
         _TimerTick.Start();
         _Effects = new List<Effect>();
-
     }
 
     private void _TimerTick_Elapsed(object sender, ElapsedEventArgs e)
@@ -90,13 +95,13 @@ public class Effects : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //string debugstr = "";//
+        string debugstr = "";//
         if(!Flags) return;
         Flags = false;
         int i = 0;
         while (i < _Effects.Count)
         {
-            //debugstr += _Effects[i].Caption + ";  ";//
+            debugstr += _Effects[i].Caption + ";  ";//
             if (_Effects[i].TimeOver)
             {
                 if (_Effects[i].EffectsUsed)
@@ -107,6 +112,7 @@ public class Effects : MonoBehaviour
                         Stat.ChangeHPMax(-_Effects[i].EffectMaxHP);
                 }
                 _Effects.RemoveAt(i);
+                //Debug.Log("! "+_Effects.Count);
             }
             else
             {
@@ -124,7 +130,7 @@ public class Effects : MonoBehaviour
                 i++;
             }
         }
-        //Debug.Log(debugstr);//
+        Debug.Log(debugstr);//
     }
 
     public void AddEffect(int EffectTime, int TikDamage = 0, int EffectSpeed = 0,
@@ -143,14 +149,40 @@ public class Effects : MonoBehaviour
         for (int i = 0; i < _Effects.Count; i++)
         if (_Effects[i].Caption == effect.Caption)
         {
-            effect.TimeOver = false;
-            effect.TimerStop();
-            effect.TimerStart();
+            if(_Effects[i].EffectTime == 0)
+            {
+                return;
+            } 
+            else
+            {
+                effect.TimeOver = false;
+                effect.TimerStop();
+                effect.TimerStart();
+            }
             return;
         }
+        effect.TimerStop();
+        effect.TimeOver = false;
         effect.EffectsUsed = false;
         _Effects.Add(effect);
             
+    }
+    public void DelEffect(string Caption)
+    {
+        for (int i = 0; i < _Effects.Count; i++)
+            if (_Effects[i].Caption == Caption)
+            {
+                _Effects[i].TimeOver = true;
+                return;
+            }
+    }
+
+    public void DelAllEffects()
+    {
+        for (int i = 0; i < _Effects.Count; i++)
+        {
+            _Effects[i].TimeOver = true;
+        }
     }
 }
 

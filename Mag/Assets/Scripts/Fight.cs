@@ -1,6 +1,7 @@
 using System;
 using System.Timers;
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections.Generic;
 using TMPro;
 using static UnityEditor.Progress;
@@ -32,6 +33,8 @@ public class Fight : MonoBehaviour
     private bool TimeAttackTic = false;
 
     [SerializeField] GameObject PlayerStats;
+
+    [SerializeField] Text _Elements;
 
     private Stats _Stats;
 
@@ -66,9 +69,35 @@ public class Fight : MonoBehaviour
 
     void Update()
     {
+        string str ="";
+        foreach (var element in Elements)
+        {
+            
+            switch (element)
+            {
+                case 0:
+                    str += " _";
+                    break;
+                case 1:
+                    str += "F_";
+                    break;
+                case 2:
+                    str += "W_";
+                    break;
+                case 3:
+                    str += "L_";
+                    break;
+                default:
+                    str += "?_";
+                    break;
+            }
+            _Elements.text = str;
+        }
+
+
         if (TimeAttackTic)
         {
-            switch (switch_on)
+            switch (_Stats.MagicStaffNow)
             {
                 case 0:
                     fire();
@@ -76,7 +105,10 @@ public class Fight : MonoBehaviour
                 case 1:
                     lazer();
                     break;
-                //default:
+                case 2:
+                    lazer();
+                    break;
+                    //default:
             }
             for (int i = 0; i < UnderAttack.Count; i++)
             {
@@ -110,25 +142,42 @@ public class Fight : MonoBehaviour
         }
     }
 
-    public void ButtonOnClickA()
+    public void ButtonOnClickFire()
     {
-        AClicked = true;
+        foreach (ref int element in Elements.AsSpan())
+            if (element == 0)
+            {
+                element = 1;
+                return;
+            }
     }
 
-    public void ButtonOnClickB()
+    public void ButtonOnClickWater()
     {
-        BClicked = true;
+        foreach (ref int element in Elements.AsSpan())
+            if (element == 0)
+            {
+                element = 2;
+                return;
+            }
     }
 
-    public void ButtonOnClickC()
+    public void ButtonOnClickLife()
     {
-        switch_on = 0;
+        foreach (ref int element in Elements.AsSpan())
+            if (element == 0)
+            {
+                element = 3;
+                return;
+            }
     }
 
-    public void ButtonOnClickD()
+    public void ButtonOnClickChange()
     {
-        switch_on = 1;
+        _Stats.MagicStaffNow = _Stats.MagicStaffNow + 1;
     }
+
+
 
     void fire()
     {

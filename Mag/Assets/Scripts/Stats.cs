@@ -4,28 +4,44 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Timers;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Stats : MonoBehaviour
 {
+    [SerializeField] private string _Name = "Kokoro";
+    [SerializeField] private Text _NameLabel;
     [SerializeField] private int _MaxHPDefault = 10;
     [SerializeField] private int _HPEffect = 0;
     [SerializeField] private int _HPNow = 10;
     [SerializeField] private float _Speed = 10;
     [SerializeField] private float _SpeedEffect = 0;
-    [SerializeField] private int _MagicStaffNow = 2;
-    [SerializeField] private GameObject[] _MagicStaff;
     [SerializeField] private JoyStickMovement _JoyStickMovement;
+    [Header("Equipment Settings")]
+    [SerializeField] private int _MagicStaffNow = 2;
+    public int MagicStaffNow
+        {
+            get {return _MagicStaffNow; }
+            set { ChangeMagicStaff(value); }
+        }
+    [SerializeField] private GameObject[] _MagicStaff;
     [Header("Health Bar Settings")]
-    [SerializeField] private GameObject _Bar;
-    private StatusBar HPBar;
+    [SerializeField] private StatusBar HPBar;
+
 
 
     public void ChangeMagicStaff(int MagicStaff)
     {
         if (MagicStaff > -1 && MagicStaff < _MagicStaff.Length)
         {
+            _MagicStaff[_MagicStaffNow].SetActive(false);
             _MagicStaff[MagicStaff].SetActive(true);
             _MagicStaffNow = MagicStaff;
+        }
+        else
+        {
+            _MagicStaff[_MagicStaffNow].SetActive(false);
+            _MagicStaff[0].SetActive(true);
+            _MagicStaffNow = 0;
         }
     }
 
@@ -76,8 +92,8 @@ public class Stats : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
+        _NameLabel.text = _Name;
         _JoyStickMovement = GetComponent<JoyStickMovement>();
-        HPBar = _Bar.GetComponent<StatusBar>();
         HPBar.ChangeFill(_HPNow / ((_MaxHPDefault + _HPEffect) * 1.0f));
 
         //_ChangeBar = GetComponent<ChangeBar>();

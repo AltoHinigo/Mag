@@ -10,7 +10,7 @@ public class JoyStickMovement : MonoBehaviour
     [SerializeField] private FixedJoystick _MoveJStk;
     [SerializeField] private FixedJoystick _ViewJStk;
     [SerializeField] private Animator _animator;
-
+    public bool isMoving = false;
     [SerializeField] private float _moveSpeed;
 
     public void ChangeSpeed(float moveSpeed)

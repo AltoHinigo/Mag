@@ -57,7 +57,9 @@ public class InteractiveObject : MonoBehaviour
 
     void Start()
     {
-        _Effects = _GOEffects.GetComponent<Effects>();
+        if (_GOEffects == null)
+            return;
+        _GOEffects.TryGetComponent<Effects>(out _Effects);
     }
     void Update()
     {

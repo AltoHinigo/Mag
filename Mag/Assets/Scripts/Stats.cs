@@ -26,9 +26,18 @@ public class Stats : MonoBehaviour
     [SerializeField] private GameObject[] _MagicStaff;
     [Header("Health Bar Settings")]
     [SerializeField] private StatusBar HPBar;
+    [Header("Spawn")]
+    [SerializeField] private Transform SpawnPoint;
+    [Header("Effects")]
+    [SerializeField] private Effects _Effects;
 
 
-
+    public void GameOver()
+    {
+        this.transform.SetPositionAndRotation(SpawnPoint.position,SpawnPoint.rotation);
+        _Effects.DelAllEffects();
+        ChangeHP(_MaxHPDefault / 2);
+    }
     public void ChangeMagicStaff(int MagicStaff)
     {
         if (MagicStaff > -1 && MagicStaff < _MagicStaff.Length)
@@ -53,6 +62,7 @@ public class Stats : MonoBehaviour
             _HPNow = 0;
             HPBar.ChangeFill(0);
             Debug.Log("GameOver");
+            GameOver();
             return;
         }
         _HPNow += HP;

@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using TMPro;
-using static UnityEditor.Progress;
+using System.Collections;
+//using Unity.VisualScripting;
 //using Unity.VisualScripting;
 //using System.Numerics;
 
@@ -18,19 +19,25 @@ public class Fight : MonoBehaviour
 
     private static List<GameObject> UnderAttack = new List<GameObject>();
 
-    private static Timer aTimer;
+    private static Timer TimeAttack;
 
-    private static Timer bTimer;
+    private static Timer TimeAttackTic;
 
     private int[] Elements = new int[5];
 
-    public GameObject ParticleSystemObject;
+    public ParticleSystemChange aParticleSystem;
 
-    private ParticleSystem aParticleSystem;
+    public ParticleSystemChange aParticleSystemSelf;
+
+    public ParticleSystemChange aParticleSystemAoE;
+
+    //public GameObject ParticleSystemObject;
+
+    //private ParticleSystem aParticleSystem;
 
     private bool TimeIsOver = false;
 
-    private bool TimeAttackTic = false;
+    private bool AttackTic = false;
 
     [SerializeField] GameObject PlayerStats;
 
@@ -40,39 +47,180 @@ public class Fight : MonoBehaviour
 
     private MortalObject _MortalObject;
 
-    private bool AClicked = false;
+    private bool Attack = false;
 
-    private bool BClicked = false;
+    private bool Use = false;
+
+    private bool UseSelf = false;
+
+    private bool AoE = false;
+
+    private int MagicTime = 0;
+
+    private int Fire = 0;
+    private int Water = 0;
+    private int Life = 0;
 
     // Start is called before the first frame update
     void Awake()
     {
         if (!PlayerStats.TryGetComponent<Stats>(out _Stats))
             Debug.Log("ERROR TryGetComponent<Stats>");
-        aParticleSystem = ParticleSystemObject.GetComponent<ParticleSystem>();
-        aTimer = new Timer(5000);
-        aTimer.Elapsed += OnTimer;
-        aTimer.AutoReset = false;
+        //aParticleSystem = ParticleSystemObject.GetComponent<ParticleSystem>();
+        TimeAttack = new Timer(5000);
+        TimeAttack.Elapsed += OnAttackTime;
+        TimeAttack.AutoReset = false;
 
-        bTimer = new Timer(200);
-        bTimer.Elapsed += OnbTimer;
+        TimeAttackTic = new Timer(200);
+        TimeAttackTic.Elapsed += OnTimeAttackTic;
     }
-    private void OnTimer(object s, ElapsedEventArgs e)
+    private void OnAttackTime(object s, ElapsedEventArgs e)
     {
         TimeIsOver = true;
     }
 
-    private void OnbTimer(object s, ElapsedEventArgs e)
+    private void OnTimeAttackTic(object s, ElapsedEventArgs e)
     {
-        TimeAttackTic = true;
+        AttackTic = true;
     }
 
     void Update()
     {
-        string str ="";
+        if (AttackTic)
+        {
+            if (AoE)
+            {
+                AttackTic = false;
+                return;
+            }
+            if (UseSelf)
+            {
+                _Stats.ChangeHP(Life * 2 - Fire * 2);
+                /*if(Fire == 0 && Life > 0)
+                    _Stats.ChangeHP(Life*5);*/
+                AttackTic = false;
+                return;
+            }
+            if (Use)
+            {
+                
+                switch (_Stats.MagicStaffNow)
+                {
+                    case 0:
+                        fire();
+                        break;
+                    case 1:
+                        lazer();
+                        break;
+                    case 2:
+                        lazer();
+                        break;
+                        //default:
+                }
+                for (int i = 0; i < UnderAttack.Count; i++)
+                {
+                    //_Stats.ChangeHP(-1);
+                    if (UnderAttack[i].TryGetComponent<MortalObject>(out _MortalObject))
+                    {
+                        _MortalObject.ChangeHP(Life * 2 - Fire * 2);
+                    }
+                    /*if (UnderAttack[i].gameObject.GetComponent<Renderer>().material.GetColor("_Color") == Color.red)
+                        UnderAttack[i].gameObject.GetComponent<Renderer>().material.SetColor("_Color", Color.white);
+                    else
+                        UnderAttack[i].gameObject.GetComponent<Renderer>().material.SetColor("_Color", Color.red);*/
+                }
+                AttackTic = false;
+            }
+        }
+
+        if (Input.GetKey(KeyCode.W) || Attack)
+        {
+            Fire = 0;
+            Water = 0;
+            Life = 0;
+            foreach (var element in Elements)
+                switch (element)
+                {
+                    case 1:
+                        Fire++;
+                        break;
+                    case 2:
+                        Water++;
+                        break;
+                    case 3:
+                        Life++;
+                        break;
+                }
+            Attack = false;
+            MagicTime = 500;
+            foreach (var element in Elements)
+                if (element != 0)
+                    MagicTime += 500;
+            if (MagicTime > 500)
+            {
+                TimeAttack.Interval = MagicTime;
+                TimeAttack.Start();
+                TimeAttackTic.Start();
+                if (Use)
+                {
+                    aParticleSystem.SetPrefab(new Color(1.0f * Fire, 1.0f * Life, 1.0f * Water), new Color(1.0f, 1.0f, 1.0f));
+                    aParticleSystem.Play();
+                }
+                if (UseSelf)
+                {
+                    aParticleSystemSelf.SetPrefab(new Color(1.0f * Fire, 1.0f * Life, 1.0f * Water), new Color(1.0f, 1.0f, 1.0f));
+                    aParticleSystemSelf.Play();
+                }
+                if (AoE)
+                {
+                    aParticleSystemAoE.SetPrefab(new Color(1.0f * Fire, 1.0f * Life, 1.0f * Water), new Color(1.0f, 1.0f, 1.0f));
+                    aParticleSystemAoE.Play();
+                }
+            }
+            else
+            {
+                Use = false;
+                UseSelf = false;
+                AoE = false;
+            }
+        }
+        if (TimeIsOver)
+            OnTimeIsOver();
+    }
+
+    private void OnTimeIsOver()
+    {
+        foreach (ref int element in Elements.AsSpan())
+                element = 0;
+        ShowElements();
+        if(Use)
+        {
+            aParticleSystem.Pause();
+            aParticleSystem.Clear();
+        }
+        if(UseSelf)
+        {
+            aParticleSystemSelf.Pause();
+            aParticleSystemSelf.Clear();
+        }
+        if (AoE)
+        {
+            aParticleSystemAoE.Pause();
+            aParticleSystemAoE.Clear();
+        }
+        Use =false;
+        UseSelf = false;
+        AoE = false;
+        TimeIsOver = false;
+        TimeAttackTic.Stop();
+    }
+
+        private void ShowElements()
+    {
+        string str = "";
         foreach (var element in Elements)
         {
-            
+
             switch (element)
             {
                 case 0:
@@ -93,53 +241,6 @@ public class Fight : MonoBehaviour
             }
             _Elements.text = str;
         }
-
-
-        if (TimeAttackTic)
-        {
-            switch (_Stats.MagicStaffNow)
-            {
-                case 0:
-                    fire();
-                    break;
-                case 1:
-                    lazer();
-                    break;
-                case 2:
-                    lazer();
-                    break;
-                    //default:
-            }
-            for (int i = 0; i < UnderAttack.Count; i++)
-            {
-                //_Stats.ChangeHP(-1);
-                if (UnderAttack[i].TryGetComponent<MortalObject>(out _MortalObject))
-                {
-                    _MortalObject.ChangeHP(-1);
-                }
-                /*if (UnderAttack[i].gameObject.GetComponent<Renderer>().material.GetColor("_Color") == Color.red)
-                    UnderAttack[i].gameObject.GetComponent<Renderer>().material.SetColor("_Color", Color.white);
-                else
-                    UnderAttack[i].gameObject.GetComponent<Renderer>().material.SetColor("_Color", Color.red);*/
-            }
-            TimeAttackTic = false;
-        }
-        if (Input.GetKey(KeyCode.W) || AClicked)
-        {
-            AClicked = false;
-            aTimer.Start();
-            bTimer.Start();
-            aParticleSystem.Play();
-        }
-        if (TimeIsOver)
-        {
-            foreach (ref int element in Elements.AsSpan())
-                element = 0;
-            aParticleSystem.Pause();
-            aParticleSystem.Clear();
-            TimeIsOver = false;
-            bTimer.Stop();
-        }
     }
 
     public void ButtonOnClickFire()
@@ -148,6 +249,7 @@ public class Fight : MonoBehaviour
             if (element == 0)
             {
                 element = 1;
+                ShowElements();
                 return;
             }
     }
@@ -158,6 +260,7 @@ public class Fight : MonoBehaviour
             if (element == 0)
             {
                 element = 2;
+                ShowElements();
                 return;
             }
     }
@@ -168,6 +271,7 @@ public class Fight : MonoBehaviour
             if (element == 0)
             {
                 element = 3;
+                ShowElements();
                 return;
             }
     }
@@ -177,7 +281,23 @@ public class Fight : MonoBehaviour
         _Stats.MagicStaffNow = _Stats.MagicStaffNow + 1;
     }
 
+    public void ButtonOnClickUse()
+    {
+        Attack = true;
+        Use = true;
+    }
 
+    public void ButtonOnClickUseSelf()
+    {
+        Attack = true;
+        UseSelf = true;
+    }
+
+    public void ButtonOnClickAoE()
+    {
+        Attack = true;
+        AoE = true;
+    }
 
     void fire()
     {

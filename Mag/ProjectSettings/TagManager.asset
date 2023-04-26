@@ -16,7 +16,7 @@ TagManager:
   - 
   - MovePoint
   - PhysicalObject
-  - AreaEffect
+  - Interactive
   - Player
   - 
   - 

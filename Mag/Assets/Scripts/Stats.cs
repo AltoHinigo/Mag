@@ -33,6 +33,12 @@ public class Stats : MonoBehaviour
     [SerializeField] private Transform SpawnPoint;
     [Header("Effects")]
     [SerializeField] private Effects _Effects;
+    [SerializeField] private bool _EffectWater;
+    [SerializeField] private bool _EffectFire;
+    [Header("Resist effects")]
+    [SerializeField] private int _ResistEffectFire;
+    [SerializeField] private int _ResistEffectWater;
+    [SerializeField] private int _ResistEffectHard;
     [Header("Interface")]
     [SerializeField] private DeathMenu _deathMenu;
 
@@ -65,7 +71,7 @@ public class Stats : MonoBehaviour
         }
     }
 
-    public void ChangeHP(int HP)
+    public void ChangeHP(int HP, int MagicType = 0)
     {
         //Debug.Log("HP" + _HPNow);
         if (HP < 0 && _HPNow < -HP)

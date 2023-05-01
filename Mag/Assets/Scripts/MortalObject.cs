@@ -18,14 +18,6 @@ public class MortalObject : MonoBehaviour
     [SerializeField] private Image _BarFiller;
     [SerializeField] private Color _BarColorFiller;
     private float _BarFill;
-    public void ChangeMagicStaff(int MagicStaff)
-    {
-        if (MagicStaff > -1 && MagicStaff < _MagicStaff.Length)
-        {
-            _MagicStaff[MagicStaff].SetActive(true);
-            _MagicStaffNow = MagicStaff;
-        }
-    }
 
     public void ChangeHP(int HP)
     {

@@ -11,6 +11,8 @@ public class Effect
     public int TikDamage = 0;
     public float EffectSpeed = 0;
     public int EffectMaxHP = 0;
+    public bool EffectWater = false;
+    public bool EffectFire = false;
     public Timer timer;
     public bool EffectsUsed = false;
 

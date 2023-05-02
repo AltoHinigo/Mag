@@ -18,16 +18,42 @@ public class Stats : MonoBehaviour
     [SerializeField] private JoyStickMovement _JoyStickMovement;
     [Header("Equipment Settings")]
     [SerializeField] private int _MagicStaffNow = 2;
+
+
     public int MagicStaffNow
         {
             get {return _MagicStaffNow; }
             set { ChangeMagicStaff(value); }
         }
+
     [SerializeField] private GameObject[] _MagicStaff;
     [Header("Health Bar Settings")]
     [SerializeField] private StatusBar HPBar;
+    [Header("Spawn")]
+    [SerializeField] private Transform SpawnPoint;
+    [Header("Effects")]
+    [SerializeField] private Effects _Effects;
+    [SerializeField] private bool _EffectWater;
+    [SerializeField] private bool _EffectFire;
+    [Header("Resist effects")]
+    [SerializeField] private int _ResistEffectFire;
+    [SerializeField] private int _ResistEffectWater;
+    [SerializeField] private int _ResistEffectHard;
+    [Header("Interface")]
+    [SerializeField] private DeathMenu _deathMenu;
 
+    private bool isDead = false;
 
+    public void GameOver() {
+        if (isDead) {
+            return;
+        }
+
+        isDead = true;
+
+        _JoyStickMovement.isMoving = false;
+        _deathMenu.fade();
+    }
 
     public void ChangeMagicStaff(int MagicStaff)
     {
@@ -45,7 +71,7 @@ public class Stats : MonoBehaviour
         }
     }
 
-    public void ChangeHP(int HP)
+    public void ChangeHP(int HP, int MagicType = 0)
     {
         //Debug.Log("HP" + _HPNow);
         if (HP < 0 && _HPNow < -HP)
@@ -53,6 +79,7 @@ public class Stats : MonoBehaviour
             _HPNow = 0;
             HPBar.ChangeFill(0);
             Debug.Log("GameOver");
+            GameOver();
             return;
         }
         _HPNow += HP;
@@ -115,14 +142,23 @@ public class Stats : MonoBehaviour
         
     }
 
-    
-
-    
     // Update is called once per frame
     void Update()
     {
         
     }
 
+    public void onButtonContinue() {
+        isDead = false;
+
+        _JoyStickMovement.isMoving = true;
+
+        _deathMenu.showInterface();
+
+        this.transform.SetPositionAndRotation(SpawnPoint.position,SpawnPoint.rotation);
+        _Effects.DelAllEffects();
+        ChangeHP(_MaxHPDefault / 2);
+    }
     
+
 }

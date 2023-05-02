@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class AreaOfEffectDamage : MonoBehaviour
+public class AreaOfEffectDamage : MonoBehaviour//interact case
 {
 
     [SerializeField] private Effects _Effect;
@@ -29,11 +29,13 @@ public class AreaOfEffectDamage : MonoBehaviour
         {
             AreaEffectInfo _AreaEffectInfo;
             InteractiveObject _InteractiveObject;
+            AIHear _AIHear;
             if (UnderEffects[i].TryGetComponent<AreaEffectInfo>(out _AreaEffectInfo))
                 _Effect.AddEffect(_AreaEffectInfo.Info);
-            else
-                if (UnderEffects[i].TryGetComponent<InteractiveObject>(out _InteractiveObject))
+            if (UnderEffects[i].TryGetComponent<InteractiveObject>(out _InteractiveObject))
                 _InteractiveObject.DoSomething();
+            if (UnderEffects[i].TryGetComponent<AIHear>(out _AIHear))
+                _AIHear.HearTarget(true);
         }
         //Debug.Log(UnderEffects[i].name);
         //Debug.DrawRay(transform.position + transform.TransformDirection(new Vector3(0, -1, 0)), transform.TransformDirection(new Vector3(0, 3, 0)), Color.red);

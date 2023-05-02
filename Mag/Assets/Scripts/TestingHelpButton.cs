@@ -15,10 +15,16 @@ public class TestingHelpButton : MonoBehaviour
 
     public void OnClick()
     {
-        if(HelpBox.activeSelf)
+        if (HelpBox.activeSelf)
+        {
+            Time.timeScale = 1f;
             HelpBox.SetActive(false);
+        }
         else
+        {
+            Time.timeScale = 0f;
             HelpBox.SetActive(true);
+        }
     }
 
 

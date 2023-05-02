@@ -27,17 +27,17 @@ public class Movement : MonoBehaviour
 
     private int[] Elements = new int[5];
 
-    private static System.Timers.Timer aTimer;
+    private static System.Timers.Timer TimeAttack;
     void Start()
     {
         aParticleSystem = ParticleSystemObject.GetComponent<ParticleSystem>();//var
         Agent = GetComponent<NavMeshAgent>();
-        aTimer = new System.Timers.Timer(2000);
-        aTimer.Elapsed += OnTimer;
-        aTimer.AutoReset = false;
+        TimeAttack = new System.Timers.Timer(2000);
+        TimeAttack.Elapsed += OnAttackTime;
+        TimeAttack.AutoReset = false;
     }
 
-    private void OnTimer(object s, ElapsedEventArgs e)
+    private void OnAttackTime(object s, ElapsedEventArgs e)
     {
         foreach (ref int element in Elements.AsSpan())
             element = 0;
@@ -83,12 +83,12 @@ public class Movement : MonoBehaviour
             }
             else
             {
-                if (!aTimer.Enabled)
+                if (!TimeAttack.Enabled)
                 {
                     //Debug.LogWarningFormat("Play");
                     //Debug.LogWarningFormat("W = {0}", Input.GetKey(KeyCode.W));
                     //Debug.LogWarningFormat("!Elements[0] = {0}", Elements[0]);
-                    aTimer.Start();
+                    TimeAttack.Start();
                     aParticleSystem.Play();//var
                     animator.SetBool("Walk", false);
                     Agent.ResetPath();

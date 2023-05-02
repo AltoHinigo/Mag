@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.VersionControl;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody), typeof(BoxCollider))]
@@ -10,7 +9,7 @@ public class JoyStickMovement : MonoBehaviour
     [SerializeField] private FixedJoystick _MoveJStk;
     [SerializeField] private FixedJoystick _ViewJStk;
     [SerializeField] private Animator _animator;
-    public bool isMoving = false;
+    public bool isMoving = true;
     [SerializeField] private float _moveSpeed;
 
     public void ChangeSpeed(float moveSpeed)
@@ -20,9 +19,13 @@ public class JoyStickMovement : MonoBehaviour
         //Debug.Log("_moveSpeed " + _moveSpeed);
         if (moveSpeed != 0)
             _moveSpeed = moveSpeed;
+
     }
     private void FixedUpdate()
     {
+        if(!isMoving) {
+            return;
+        }
 
         _rigidbody.velocity = new Vector3(_MoveJStk.Horizontal * _moveSpeed, _rigidbody.velocity.y, _MoveJStk.Vertical * _moveSpeed);
 

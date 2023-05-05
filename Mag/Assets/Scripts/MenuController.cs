@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MenuController : MonoBehaviour {
 
@@ -20,5 +21,11 @@ public class MenuController : MonoBehaviour {
         self.SetActive(false);
 
         cameFromWindows.Pop().SetActive(true);
+    }
+
+    public void loadeScene(string scene)
+    {
+        SceneManager.LoadScene(scene);
+        SceneManager.UnloadSceneAsync("Menu");
     }
 }

@@ -14,7 +14,7 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] private float _DistAttack;
     NavMeshAgent m_Agent;
     RaycastHit m_HitInfo = new RaycastHit();
-    private static List<GameObject> UnderAttack = new List<GameObject>();
+    private List<GameObject> UnderAttack = new List<GameObject>();
     public bool HearTarget = false;
     private Effects _PlrEffects;
     [SerializeField] private int _AttackDamage = 0;
@@ -40,12 +40,15 @@ public class EnemyAI : MonoBehaviour
     private Stats _PlayerStst;
     private bool Tick = true;
     private bool Attack = false;
-    private static Timer TimeAttackTic;
+    private bool PlayerIsDied = false;
+    private Timer TimeAttackTic;
 
     private List<GameObject> UnderEffects = new List<GameObject>();
 
     void Start()
     {
+        GlobalEventManager.OnDeath += killed;
+
         TimeAttackTic = new Timer(TickTime);
         TimeAttackTic.Elapsed += OnTimeAttackTic;
 
@@ -54,18 +57,29 @@ public class EnemyAI : MonoBehaviour
         Info = new Effect(this.name, _Time, -_Damage, _SpeedEffect, _MaxHPEffect);
         _PlayerStst = _Player.GetComponent<Stats>();
     }
+
+    public void killed()
+    {
+        Attack = false;
+        Tick = false;
+        PlayerIsDied = true;
+        m_Agent.CompleteOffMeshLink();
+    }
+
     private void OnTimeAttackTic(object s, ElapsedEventArgs e)
     {
         Attack = true;
         Tick = true;
+        HearTarget = false;
+        m_Agent.CompleteOffMeshLink();
     }
     void LateUpdate()
     {
         if (Attack)
         {
             Debug.Log(this.name + " _AttackDamage " + _AttackDamage);
-            _PlrEffects.AddEffect(new Effect(this.name+"_Damage", 1, -_AttackDamage, 0, 0));
-            //_PlayerStst.ChangeHP(-_AttackDamage);
+            //_PlrEffects.AddEffect(new Effect(this.name+"_Damage", 1, -_AttackDamage, 0, 0));
+            _PlayerStst.ChangeHP(-_AttackDamage);
             Attack = false;
         }
         float dist = Vector3.Distance(_Player.transform.position, transform.position);
@@ -93,14 +107,18 @@ public class EnemyAI : MonoBehaviour
             TimeAttackTic.Stop();
             _Animator.SetBool("Attack", false);
         }
-        if (SeesTarget() || HearTarget)
+        if ((SeesTarget() || HearTarget) && !PlayerIsDied)
         {
             HearTarget = false;
             m_Agent.destination = _Player.transform.position - transform.forward;
             Alarm();
         }
-        
-        if(m_Agent.hasPath)
+        else
+        if (PlayerIsDied)
+            PlayerIsDied = false;
+
+
+        if (m_Agent.hasPath)
         {
             _Animator.SetBool("Walk", true);
         }

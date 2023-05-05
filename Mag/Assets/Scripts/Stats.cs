@@ -48,7 +48,7 @@ public class Stats : MonoBehaviour
         if (isDead) {
             return;
         }
-
+        GlobalEventManager.OnDeath();
         isDead = true;
 
         _JoyStickMovement.isMoving = false;

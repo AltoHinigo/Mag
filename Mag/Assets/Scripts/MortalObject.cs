@@ -9,8 +9,8 @@ public class MortalObject : MonoBehaviour
     [SerializeField] private int _MaxHPDefault= 10;
     [SerializeField] private int _HPEffect = 10;
     [SerializeField] private int _HPNow = 10;
-    [SerializeField] private int _MagicStaffNow = 2;
-    [SerializeField] private GameObject[] _MagicStaff;
+    //[SerializeField] private int _MagicStaffNow = 2;
+    //[SerializeField] private GameObject[] _MagicStaff;
     [Header("Health Bar Settings")]
     [SerializeField] private GameObject _Canvas;
     [SerializeField] private Image _Bar;
@@ -44,19 +44,7 @@ public class MortalObject : MonoBehaviour
     void Awake()
     {
         _Canvas.gameObject.SetActive(false);
-
-        //_ChangeBar = GetComponent<ChangeBar>();
         _BarFiller.fillAmount = (_HPNow / (_MaxHPDefault* 1.0f));
-        //_BarFiller.color = _BarColorFiller;
-        //_Bar.color = _BarColor;
-        /*for (int i = 0; i < _MagicStaff.Length; i++)
-        {
-            _MagicStaff[i].SetActive(false);
-        }
-        if (_MagicStaffNow > -1 && _MagicStaffNow < _MagicStaff.Length)
-            _MagicStaff[_MagicStaffNow].SetActive(true);
-        else
-            _MagicStaff[0].SetActive(true);*/
     }
 
     // Update is called once per frame

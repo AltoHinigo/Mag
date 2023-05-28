@@ -218,4 +218,9 @@ public class EnemyAI : MonoBehaviour
             }
         return UnderAttack.Count != 0;
     }
+
+    private void OnDestroy()
+    {
+        GlobalEventManager.OnDeath -= killed;
+    }
 }

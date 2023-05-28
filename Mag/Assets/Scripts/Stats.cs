@@ -108,7 +108,7 @@ public class Stats : MonoBehaviour
         //Debug.Log("HP"+ _HP);_SpeedEffect
         if ((_Speed + _SpeedEffect + SpeedEffect) < 0)
         {
-            _Speed = 0;
+            _SpeedEffect = -_Speed;
             _JoyStickMovement.ChangeSpeed(0);
             return;
         }

@@ -132,7 +132,7 @@ public class Effects : MonoBehaviour
                 i++;
             }
         }
-        Debug.Log(debugstr);//
+        //Debug.Log(debugstr);//
     }
 
     public void AddEffect(int EffectTime, int TikDamage = 0, int EffectSpeed = 0,

@@ -5,6 +5,8 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using TMPro;
 using System.Collections;
+//using static UnityEditor.Progress;
+//using Unity.VisualScripting;
 //using Unity.VisualScripting;
 //using Unity.VisualScripting;
 //using System.Numerics;
@@ -60,7 +62,7 @@ public class Fight : MonoBehaviour
     private int Fire = 0;
     private int Water = 0;
     private int Life = 0;
-
+    private int Cold = 0;
     // Start is called before the first frame update
     void Awake()
     {
@@ -120,6 +122,17 @@ public class Fight : MonoBehaviour
                 for (int i = 0; i < UnderAttack.Count; i++)
                 {
                     //_Stats.ChangeHP(-1);
+                    if((Cold + Water) > Fire)
+                    {
+                        //                      ICE
+
+
+
+                        //
+                        if (UnderAttack[i].TryGetComponent<MortalObject>(out _MortalObject))
+                            _MortalObject.ChangeSpeed(-2.3f);
+                    }
+                    else
                     if (UnderAttack[i].TryGetComponent<MortalObject>(out _MortalObject))
                     {
                         _MortalObject.ChangeHP(Life * 2 - Fire * 2);
@@ -138,6 +151,7 @@ public class Fight : MonoBehaviour
             Fire = 0;
             Water = 0;
             Life = 0;
+            Cold = 0;
             foreach (var element in Elements)
                 switch (element)
                 {
@@ -150,6 +164,9 @@ public class Fight : MonoBehaviour
                     case 3:
                         Life++;
                         break;
+                    case 4:
+                        Cold++;
+                    break;
                 }
             Attack = false;
             MagicTime = 500;
@@ -235,6 +252,9 @@ public class Fight : MonoBehaviour
                 case 3:
                     str += "L_";
                     break;
+                case 4:
+                    str += "C_";
+                    break;
                 default:
                     str += "?_";
                     break;
@@ -265,6 +285,17 @@ public class Fight : MonoBehaviour
             }
     }
 
+    public void ButtonOnClickCold()
+    {
+        foreach (ref int element in Elements.AsSpan())
+            if (element == 0)
+            {
+                element = 4;
+                ShowElements();
+                return;
+            }
+    }
+
     public void ButtonOnClickLife()
     {
         foreach (ref int element in Elements.AsSpan())
@@ -283,6 +314,22 @@ public class Fight : MonoBehaviour
 
     public void ButtonOnClickUse()
     {
+        if (Elements[0] == 0)
+        {
+            List<InteractiveObject> InteractiveObjects = GlobalEventManager.InteractiveObjects;
+            if (InteractiveObjects.Count != 0)
+            {
+                InteractiveObject tmp = InteractiveObjects[0];
+                float min = tmp.Dist;
+                foreach (var item in InteractiveObjects)
+                    if (item.Dist > min)
+                    {
+                        tmp = item;
+                        min = item.Dist;
+                    }
+                ((GetWeapon)tmp).ChangWeapon(PlayerStats);
+            }
+        }
         Attack = true;
         Use = true;
     }

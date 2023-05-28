@@ -44,7 +44,7 @@ Texture2D toTexture2D(RenderTexture rTex)
 }
 
     // Update is called once per frame
-    void Update()
+    public void AddICE()//Update()
     {
         if (_DrawFlag != _ExDrawFlag)
         {
@@ -57,7 +57,7 @@ Texture2D toTexture2D(RenderTexture rTex)
         if (Input.GetKey(KeyCode.Q) || true)
         {
             Debug.DrawRay(new Vector3(transform.position.x, transform.position.y + 1, transform.position.z), new Vector3(0, transform.position.y - 4, 0), Color.green);
-            if (Physics.Raycast(new Vector3(transform.position.x, transform.position.y + 1, transform.position.z), new Vector3(0, transform.position.y - 4, 0), out RaycastHit hit))
+            if (Physics.Raycast(new Vector3(transform.position.x, transform.position.y + 1, transform.position.z), new Vector3(0, transform.position.y - 4, 0), out RaycastHit hit, 4f, 1<<4))
             {
                 hitTextureCord = hit.textureCoord;
                 WaterMat.SetFloat(DrawFlag, 1);

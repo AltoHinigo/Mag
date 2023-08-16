@@ -11,7 +11,12 @@ public class JoyStickMovement : MonoBehaviour
     [SerializeField] private Animator _animator;
     public bool isMoving = true;
     [SerializeField] private float _moveSpeed;
+    private CharacterController _CharacterController;
 
+    private void Start()
+    {
+        _CharacterController = GetComponent<CharacterController>();
+    }
     public void ChangeSpeed(float moveSpeed)
     {
         //Debug.Log("!");
@@ -28,6 +33,8 @@ public class JoyStickMovement : MonoBehaviour
         }
 
         _rigidbody.velocity = new Vector3(_MoveJStk.Horizontal * _moveSpeed, _rigidbody.velocity.y, _MoveJStk.Vertical * _moveSpeed);
+        //_CharacterController.Move(new Vector3(_MoveJStk.Horizontal * _moveSpeed /10, _rigidbody.velocity.y, _MoveJStk.Vertical * _moveSpeed / 10));
+
 
         if ((_ViewJStk.Horizontal != 0 || _ViewJStk.Vertical != 0) && _moveSpeed == 0)
         {

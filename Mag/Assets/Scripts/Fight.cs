@@ -5,6 +5,11 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using TMPro;
 using System.Collections;
+using static System.Net.Mime.MediaTypeNames;
+//using Unity.VisualScripting;
+///using UnityEditor.Profiling;
+using UnityEngine.Rendering;
+////using System.Diagnostics;
 //using static UnityEditor.Progress;
 //using Unity.VisualScripting;
 //using Unity.VisualScripting;
@@ -43,7 +48,7 @@ public class Fight : MonoBehaviour
 
     [SerializeField] GameObject PlayerStats;
 
-    [SerializeField] Text _Elements;
+    [SerializeField] UnityEngine.UI.Text _Elements;
 
     private Stats _Stats;
 
@@ -88,6 +93,34 @@ public class Fight : MonoBehaviour
 
     void Update()
     {
+        Debug.Log(SystemInfo.systemMemorySize);
+        /*string bundleIdentifier = UnityEngine.Application.identifier; /*System.Net.Mime.MediaTypeNames.Application*/ //bundleIdentifier;
+        /*System.Diagnostics.Process process = new System.Diagnostics.Process();
+        process.StartInfo.FileName = "sh";
+        process.StartInfo.Arguments = "-c top | grep " + bundleIdentifier;
+        process.StartInfo.UseShellExecute = false;
+        process.StartInfo.RedirectStandardOutput = true;
+        process.StartInfo.RedirectStandardError = true;
+        process.OutputDataReceived += (sender, args) =>
+        { // this is not executed in main thread, so dont use unity functions
+            if (args.Data.Contains(bundleIdentifier))
+            {
+                Debug.Log("Stats: "+ args.Data);
+            }
+            Debug.Log("received output: "+ args.Data);
+        };
+        process.ErrorDataReceived += (sender, args) => Debug.Log("Stats: " + args.Data);
+        process.Start();
+        process.BeginOutputReadLine();
+        process.BeginErrorReadLine();
+
+        if (process.HasExited)
+            Debug.LogError("Process has already exited.");
+        */
+        //RealtimeGICPUUsage.Unlimited:
+
+        //Debug.Log("sdf      " +  /*/UISystemProfilerApi/*/ /*/ProfilingUtility/*/ /*/ProfilerCategoryInfo/*/) ;
+
         if (AttackTic)
         {
             if (AoE)
@@ -126,7 +159,16 @@ public class Fight : MonoBehaviour
                     {
                         //                      ICE
 
-
+                        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y + 1, transform.position.z), new Vector3(0, transform.position.y - 4, 0), Color.green);
+                        if (Physics.Raycast(new Vector3(transform.position.x, transform.position.y + 1, transform.position.z), new Vector3(0, transform.position.y - 4, 0), out RaycastHit hit, 4f, 1 << 4))
+                        {
+                         /*   hitTextureCord = hit.textureCoord;
+                            WaterMat.SetFloat(DrawFlag, 1);
+                            WaterMat.SetVector(DrawPosition, hitTextureCord);
+                            Water.Update();
+                            if (tex != null)
+                                Debug.Log(tex.GetPixel((int)(hitTextureCord.x * Water.width), (int)(hitTextureCord.y * Water.height)));*/
+                        }
 
                         //
                         if (UnderAttack[i].TryGetComponent<MortalObject>(out _MortalObject))
@@ -185,6 +227,10 @@ public class Fight : MonoBehaviour
                 }
                 if (UseSelf)
                 {
+                    for(int i = 0; i < Elements.Length; i++)
+                    {
+
+                    }
                     aParticleSystemSelf.SetPrefab(new Color(1.0f * Fire, 1.0f * Life, 1.0f * Water), new Color(1.0f, 1.0f, 1.0f));
                     aParticleSystemSelf.Play();
                 }

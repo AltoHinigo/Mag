@@ -21,20 +21,22 @@ public class Stats : MonoBehaviour
 
 
     public int MagicStaffNow
-        {
-            get {return _MagicStaffNow; }
-            set { ChangeMagicStaff(value); }
-        }
+    {
+        get {return _MagicStaffNow; }
+        set { ChangeMagicStaff(value); }
+    }
 
     [SerializeField] private GameObject[] _MagicStaff;
     [Header("Health Bar Settings")]
     [SerializeField] private StatusBar HPBar;
     [Header("Spawn")]
     [SerializeField] private Transform SpawnPoint;
-    [Header("Effects")]
+    [Header("Effects")] // под эффектом
     [SerializeField] private Effects _Effects;
-    [SerializeField] private bool _EffectWater;
+    [SerializeField] private bool _EffectWet;
     [SerializeField] private bool _EffectFire;
+    [SerializeField] private bool _EffectElectricity;
+    [SerializeField] private bool _EffectFroze;
     [Header("Resist effects")]
     [SerializeField] private int _ResistEffectFire;
     [SerializeField] private int _ResistEffectWater;

@@ -44,7 +44,7 @@ Texture2D toTexture2D(RenderTexture rTex)
 }
 
     // Update is called once per frame
-    public void AddICE()//Update()
+    public void _AddICE()//Update()
     {
         if (_DrawFlag != _ExDrawFlag)
         {
@@ -72,7 +72,21 @@ Texture2D toTexture2D(RenderTexture rTex)
                 hitTextureCord = Vec2;
     }
 
-        public async void WaterOnIce()
+    public void AddICE(Vector2 hitTextureCord)
+    {
+        WaterMat.SetFloat(DrawFlag, 1);
+        WaterMat.SetVector(DrawPosition, hitTextureCord);
+        Water.Update();
+        if (tex != null)
+            Debug.Log(tex.GetPixel((int)(hitTextureCord.x * Water.width), (int)(hitTextureCord.y * Water.height)));
+    }
+
+    public float OnICE(Vector2 hitTextureCord)
+    {
+        return tex.GetPixel((int)(hitTextureCord.x * Water.width), (int)(hitTextureCord.y * Water.height)).a;
+    }
+
+    public async void WaterOnIce()
     {
         while (ShaderRun)
         {

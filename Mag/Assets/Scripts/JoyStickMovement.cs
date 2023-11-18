@@ -2,20 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody), typeof(BoxCollider))]
 public class JoyStickMovement : MonoBehaviour
 {
-    [SerializeField] private Rigidbody _rigidbody;
     [SerializeField] private FixedJoystick _MoveJStk;
     [SerializeField] private FixedJoystick _ViewJStk;
     [SerializeField] private Animator _animator;
     public bool isMoving = true;
     [SerializeField] private float _moveSpeed;
-    private CharacterController _CharacterController;
+    private PlayerController PC;
 
     private void Start()
     {
-        _CharacterController = GetComponent<CharacterController>();
+        PC = GetComponent<PlayerController>();
     }
     public void ChangeSpeed(float moveSpeed)
     {
@@ -28,11 +26,22 @@ public class JoyStickMovement : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        if(!isMoving) {
+        //PC.Apply(new Vector3(1f, 0f, 1f));
+        if (!isMoving) {
             return;
         }
+        
+        if (_MoveJStk.Horizontal != 0 || _MoveJStk.Vertical != 0)
+        {
+            PC.Apply(new Vector3(_MoveJStk.Horizontal, 0f, _MoveJStk.Vertical));
+            _animator.SetBool("Walk", true);
+        }
+        else
+            _animator.SetBool("Walk", false);
 
-        _rigidbody.velocity = new Vector3(_MoveJStk.Horizontal * _moveSpeed, _rigidbody.velocity.y, _MoveJStk.Vertical * _moveSpeed);
+        
+
+        /*_rigidbody.velocity = new Vector3(_MoveJStk.Horizontal * _moveSpeed, _rigidbody.velocity.y, _MoveJStk.Vertical * _moveSpeed);
         //_CharacterController.Move(new Vector3(_MoveJStk.Horizontal * _moveSpeed /10, _rigidbody.velocity.y, _MoveJStk.Vertical * _moveSpeed / 10));
 
 
@@ -53,6 +62,6 @@ public class JoyStickMovement : MonoBehaviour
             _animator.SetBool("Walk", false);
         if (_ViewJStk.Horizontal != 0 || _ViewJStk.Vertical != 0)
             transform.rotation = Quaternion.LookRotation(new Vector3(_ViewJStk.Horizontal, _rigidbody.velocity.y, _ViewJStk.Vertical));
-
+        */
     }
 }

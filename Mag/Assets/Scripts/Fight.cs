@@ -93,7 +93,7 @@ public class Fight : MonoBehaviour
 
     void Update()
     {
-        Debug.Log(SystemInfo.systemMemorySize);
+        //Debug.Log(SystemInfo.systemMemorySize);
         /*string bundleIdentifier = UnityEngine.Application.identifier; /*System.Net.Mime.MediaTypeNames.Application*/ //bundleIdentifier;
         /*System.Diagnostics.Process process = new System.Diagnostics.Process();
         process.StartInfo.FileName = "sh";
